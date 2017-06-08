@@ -1,0 +1,89 @@
+@startuml
+
+interface segment{
+    +seg2SentenceLabel(String): List<CoreLabel>
+    +seg2SentenceString(String): List<String>
+    +seg(String): String
+}
+
+class SegmenterFactory{
+    +{static} HANLP_CRF: hanlp_crf
+    +{static} HANLP_VIBERTI: hanlp_viberti
+    +{static} CORE_CTB: corenlp_ctb
+    +{static} CORE_PKU: corenlp_pku
+    +{static} DEFAULT_MODEL: HANLP_VIBERTI
+
+    +{static} makeEnglishSegmenter(): Segmenter
+    +{static} makeSegmenter(String, String): Segmenter
+    +{static} makeEnglishSegmenter(String): Segmenter
+
+}
+
+abstract class AbstractCoreNlpSegmenter{
+    #{abstract} getSegmenter: CRFClassifier<CoreLabel>
+    #createSegmenter(): CRFClassifier<CoreLabel>
+    +seg2SentenceLabel(String): List<CoreLabel>
+    +seg2SentenceString(String): List<String>
+    +seg(String): String
+}
+
+abstract class AbstractHanlpSegementer{
+    #{abstract}getSegmenter: Segment
+    +seg2SentenceLabel(String): List<CoreLabel>
+    +seg2SentenceString(String): List<String>
+    +seg(String): seg
+    +segTerms(String): List<Term>
+    +segSentenceTerms(String): List<List<Term>>
+}
+
+class Config{
+    -{static} BASE_PROPERTY: nlp_config_base
+    -{static} base:
+    -{static} sysLanguage: en
+    +{static} MODEL_PROPERTY: model
+
+    +{static} setBase(base): void
+    +{static} setSysLan(String): void
+    +{static} getSyslanguage(): String
+    +{static} getPropertiesFromClassPath(String): Properties
+    +{static} getPropertiesFromBase(String): Properties
+    +{static} getProperties(Class): Properties
+}
+
+interface Configurable{
+    +{abstract} getProperties(): Properties
+}
+
+class CoreNlpCtbSegmenter{
+    -{static} seg: CRFClassifier<CoreLabel>
+
+    +getProperties(): Properties
+    +getSegmenter(): CRFClassifier<CoreLabel>
+}
+
+class CoreNlpPkuSegmenter{
+    -{static} seg: CRFClassifier<CoreLabel>
+    +getProperties(): Properties
+    +getSegmenter(): CRFClassifier<CoreLabel>
+}
+
+class EnglishSegmenter{
+    +seg2SentenceLabel(String): List<CoreLabel>
+    +seg2SentenceString(String): List<String>
+    +getSegmenter(): CRFClassifier<CoreLabel>
+    +getProperties(): Properties
+}
+
+class HanLpCrfSegmenter{
+    #getSegmenter(): Segment
+}
+
+class HanLpViterbiSegmenter{
+    -{static} seg: NLPTokenizer.SEGMENT
+    #getSegmenter(): Segment
+}
+
+
+
+
+@enduml

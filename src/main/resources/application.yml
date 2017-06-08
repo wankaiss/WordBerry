@@ -1,0 +1,103 @@
+﻿# Example YAML configuration file
+# ==========================================================
+# This file can be overwritten by command option:
+# java -jar ybbsite-0.0.1-SNAPSHOT.jar --spring.config.location="file:config/application.yaml"
+# Please create "config" folder and put the application.yaml there. Run the jar with above command line options
+# All spring boot related configureation can be found here:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ==========================================================
+spring:
+  profiles.active: dev   # dev, test, prod
+---
+
+ybb:
+  jwt-secret: Mi63rry1sGood-.
+  token:
+    # token timeout in seconds
+    timeout: 2592000
+  scanword-url: https://dev.youbanban.com/gkiwi/osvc/v1.3/scan_word
+
+#敏感词过滤 使用相对路径加载
+#  anti-corruption_path: sensitiveWord/anti-corruption.txt
+#  porn-word_path: sensitiveWord/porn-word.txt
+#  terror_path: sensitiveWord/terror.txt
+#  others_path: sensitiveWord/others.txt
+#  reactionary_path: sensitiveWord/reactionary.txt
+sensitive-word:
+  pathname:
+    sensitiveWord/anti-corruption.txt,
+    sensitiveWord/porn-word.txt,
+    sensitiveWord/terror.txt,
+    sensitiveWord/others.txt,
+    sensitiveWord/reactionary.txt
+
+server:
+  port: 8680
+  contextPath: /wb
+ 
+error:
+  whitelabel:
+    enabled: false
+
+# MANAGEMENT HTTP SERVER (ManagementServerProperties)
+management:
+  port: 8681
+  address: 127.0.0.1
+  security:
+    enabled: false
+
+spring:
+  main:
+    show-banner: false
+  # pid file
+  #pidfile: logs/app.pid
+  # Message
+  messages:
+    basename: i18n/messages
+
+# Loggin
+logging:
+  path: /opt/app/wordberry/logs
+  file: /opt/app/wordberry/logs/app.log
+
+---
+# Dev settings
+spring.profiles: test
+debug: true
+logging:
+  level:
+    com:
+        youbanban: DEBUG
+    org:
+      springframework:
+        security: ERROR
+        data: 
+          couchbase: DEBUG
+
+---
+# Test settings
+spring.profiles: dev
+debug: true
+logging:
+  level:
+    com:
+        youbanban: DEBUG
+    org:
+      springframework:
+        security: ERROR
+        data: 
+          couchbase: DEBUG
+---
+# Prod settings
+spring.profiles: prod
+debug: false 
+
+logging:
+  level:
+    com:
+        youbanban: INFO
+    org:
+      springframework:
+        security: ERROR
+        data: 
+          couchbase: INFO
